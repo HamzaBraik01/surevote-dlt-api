@@ -1,0 +1,293 @@
+# ===============================================================================
+# SureVote DLT API - Git Ignore Rules
+# ===============================================================================
+
+# ============================================================================
+# BUILD & DEPENDENCY ARTIFACTS
+# ============================================================================
+target/
+build/
+.gradle/
+dist/
+*.jar
+*.war
+*.zip
+*.tar.gz
+*.rar
+
+# Maven
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Node (if frontend is included)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Gradle
+.gradle
+build/
+gradle-app.setting
+gradlew
+gradlew.bat
+
+# ============================================================================
+# IDE & EDITOR CONFIGURATIONS
+# ============================================================================
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-project
+*.sublime-workspace
+.tern-port
+
+# Eclipse
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+
+# NetBeans
+nbproject/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# ============================================================================
+# ENVIRONMENT & CREDENTIALS (CRITICAL)
+# ============================================================================
+.env
+.env.local
+.env.local.php
+.env.*.local
+.env.production
+.env.staging
+application-local.properties
+application-local.yml
+application-local.yaml
+secrets.properties
+secrets.yml
+secrets.txt
+
+# Credentials & API Keys
+credentials.json
+credentials.yaml
+*.key
+*.pem
+private_key.*
+public_key.*
+
+# ============================================================================
+# RUNTIME & CACHE FILES
+# ============================================================================
+logs/
+*.log
+*.log.*
+log*.txt
+*.out
+
+# Cache directories
+.cache/
+.pytest_cache/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Temp files
+tmp/
+temp/
+*.tmp
+*.bak
+*~
+
+# ============================================================================
+# GRADLE WRAPPER (Optional, use local Maven)
+# ============================================================================
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+# ============================================================================
+# DATABASE & DATA
+# ============================================================================
+*.db
+*.sqlite
+*.sqlite3
+*.h2.db
+data/
+db/
+database/
+/*.sql
+
+# ============================================================================
+# DOCKER & CONTAINERS
+# ============================================================================
+.dockerignore
+docker-compose.override.yml
+.docker/
+
+# ============================================================================
+# OPERATING SYSTEM FILES
+# ============================================================================
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+.windows/
+
+# Linux
+.directory
+
+# ============================================================================
+# VERSION CONTROL & GIT
+# ============================================================================
+.git/
+.gitignore.local
+.gitattributes.local
+*.orig
+*.rej
+.merge
+.conflicted
+
+# ============================================================================
+# IDE TEMP & ANALYSIS
+# ============================================================================
+junitvm.properties
+JUnitVmOptions.txt
+.checkstyle
+.findbugs
+.fb-results.xml
+.analysis
+analysis/
+coverages/
+jacoco-report/
+
+# ============================================================================
+# DEPENDENCY CACHES
+# ============================================================================
+.m2/
+.ivy2/
+~/.gradle/
+.resolvers
+
+# ============================================================================
+# GENERATED FILES
+# ============================================================================
+*.generated.java
+generated/
+src-gen/
+target/generated-sources/
+target/generated-test-sources/
+
+# ============================================================================
+# DOCUMENTATION BUILD
+# ============================================================================
+/docs/build/
+/docs/_build/
+site/
+*.pdf
+*.md.html
+
+# ============================================================================
+# MARKDOWN FILES (keep README.md only)
+# ============================================================================
+*.md
+!README.md
+
+# ============================================================================
+# APPLICATION SPECIFIC
+# ============================================================================
+
+# Upload directories
+uploads/
+public/uploads/
+/var/uploads/
+
+# Test coverage
+coverage/
+htmlcov/
+.coverage
+.coveragerc
+jacoco.exec
+
+# Application backups
+*.backup
+*.bak
+backup/
+old/
+archive/
+
+# ============================================================================
+# CI/CD & DEPLOYMENT
+# ============================================================================
+.github/workflows/secrets/
+.gitlab-ci-secret
+.travis-secret
+.circleci/secrets
+.bamboo/secrets
+
+# ============================================================================
+# SECURITY AUDIT
+# ============================================================================
+trivy-report.html
+trivy-report.json
+snyk-report.json
+bfg-report.txt
+BFG-Credentials.txt
+
+# ============================================================================
+# LOCK FILES (Keep in repository)
+# ============================================================================
+!pom.xml
+
+# ============================================================================
+# KEEP THESE IN REPOSITORY (Exception rules)
+# ============================================================================
+!.gitkeep
+!pom.xml
+!README.md
+!.github/
+!.gitignore
+!
