@@ -1,0 +1,133 @@
+# =====================================================
+# SUREVOTE — Docker Compose
+# Services:
+#   - postgres       : PostgreSQL 16 database
+#   - pgadmin        : pgAdmin 4 web UI (dev only)
+#   - surevote-api   : Spring Boot 4 backend
+# =====================================================
+
+version: "3.9"
+
+services:
+
+  # ───────────────────────────────────────────────────
+  # PostgreSQL 16
+  # ───────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: surevote-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       surevote_db
+      POSTGRES_USER:     surevote_user
+      POSTGRES_PASSWORD: surevote_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - surevote-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U surevote_user -d surevote_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # ───────────────────────────────────────────────────
+  # pgAdmin 4  (development convenience — remove in prod)
+  # Access: http://localhost:5050
+  # Login:  admin@surevote.ma / admin
+  # ───────────────────────────────────────────────────
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: surevote-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL:    admin@surevote.ma
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - surevote-net
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - dev
+
+  # ───────────────────────────────────────────────────
+  # SUREVOTE Spring Boot API
+  # Access:       http://localhost:8080
+  # Swagger UI:   http://localhost:8080/swagger-ui.html
+  # ───────────────────────────────────────────────────
+  surevote-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    image: surevote-api:latest
+    container_name: surevote-api
+    restart: unless-stopped
+    environment:
+      # ── Database ───────────────────────────────────
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/surevote_db
+      DB_USER:               surevote_user
+      DB_PASSWORD:           surevote_pass
+
+      # ── JWT ────────────────────────────────────────
+      # Override in prod with a strong 256-bit secret (env var or secret manager)
+      JWT_SECRET:            ${JWT_SECRET:-4b6e8c2a9f1d3e7b0c5a8f2e4d7c1b9a6e3f5d8c2b0a7e4f1c9b6a3d0e8f5c2}
+      JWT_EXPIRATION:        ${JWT_EXPIRATION:-3600000}
+      JWT_REFRESH_EXPIRATION: ${JWT_REFRESH_EXPIRATION:-604800000}
+
+      # ── Mail (SMTP) ─────────────────────────────────
+      MAIL_HOST:     ${MAIL_HOST:-smtp.gmail.com}
+      MAIL_PORT:     ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-surevote.noreply@gmail.com}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-your_app_password}
+
+      # ── CORS ───────────────────────────────────────
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:4200}
+
+      # ── File uploads ───────────────────────────────
+      FILE_UPLOAD_DIR: /app/uploads
+
+      # ── Spring profile ─────────────────────────────
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-default}
+    ports:
+      - "8080:8080"
+    volumes:
+      - uploads_data:/app/uploads
+    networks:
+      - surevote-net
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+# =====================================================
+# Named volumes (persisted across container restarts)
+# =====================================================
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+  uploads_data:
+    driver: local
+
+# =====================================================
+# Internal network
+# =====================================================
+networks:
+  surevote-net:
+    driver: bridge
