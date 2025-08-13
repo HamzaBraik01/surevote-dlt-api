@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: hash-otp-column
+      author: surevote
+      comment: "Add OTP hashing - NOTE: OTP column already exists, no migration needed. This changelog documents the design decision."
+      changes:
+        - sql:
+            sql: |
+              -- OTP is now hashed with BCrypt before storage
+              -- Migration: Manual - existing OTPs should be cleared and regenerated
+              -- No schema change required as VARCHAR(255) accommodates hashed values
+            splitStatements: false
+            stripComments: true
