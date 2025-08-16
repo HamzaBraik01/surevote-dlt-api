@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-vote-checksum-salt
+      author: surevote
+      comment: "Add checksum_salt column to votes table for per-vote unique integrity checksums (FR-12 improvement)"
+      changes:
+        - addColumn:
+            tableName: votes
+            columns:
+              - column:
+                  name: checksum_salt
+                  type: VARCHAR(36)
+                  constraints:
+                    nullable: true
+                  remarks: "Random UUID salt used during checksum computation. Stored to allow independent re-verification of each vote record."
