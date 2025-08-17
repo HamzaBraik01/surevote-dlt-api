@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-create-revoked-tokens
+      author: surevote-analysis
+      comment: "SEC-1: Persistent JWT token revocation table (replaces volatile in-memory blacklist)"
+      changes:
+        - createTable:
+            tableName: revoked_tokens
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: token_hash
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: expires_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: revoked_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: idx_revoked_token_hash
+            tableName: revoked_tokens
+            unique: true
+            columns:
+              - column:
+                  name: token_hash
+        - createIndex:
+            indexName: idx_revoked_token_expires
+            tableName: revoked_tokens
+            columns:
+              - column:
+                  name: expires_at
